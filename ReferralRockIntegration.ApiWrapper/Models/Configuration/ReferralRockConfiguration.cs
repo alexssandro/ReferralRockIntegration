@@ -1,4 +1,4 @@
-﻿namespace ReferralRockIntegration.ApiWrapper.Models
+﻿namespace ReferralRockIntegration.ApiWrapper.Models.Configuration
 {
 
     public class ReferralRockConfiguration

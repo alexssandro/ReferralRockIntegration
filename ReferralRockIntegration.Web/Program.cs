@@ -1,6 +1,6 @@
 using ReferralRockIntegration.ApiWrapper;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
-using ReferralRockIntegration.ApiWrapper.Models;
+using ReferralRockIntegration.ApiWrapper.Models.Configuration;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -14,7 +14,8 @@ builder.Services.AddSingleton(referralRockConfiguration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IReferralRockApiWrapper, ReferralRockApiWrapper>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IReferralRepository, ReferralRepository>();
 builder.Services.AddHttpClient("ReferralRock", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://api.referralrock.com");
@@ -26,6 +27,7 @@ builder.Services.AddHttpClient("ReferralRock", httpClient =>
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", keyBase64);
 });
 
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
