@@ -1,43 +1,47 @@
-﻿using ReferralRockIntegration.ApiWrapper.Interfaces;
+﻿using Microsoft.Extensions.Configuration;
+using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models;
 using System.Collections;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
 namespace ReferralRockIntegration.ApiWrapper
 {
-    public class ReferralRockApiWrapper : IReferralRockApiWrapper
+    public class ReferralRockApiWrapper : BaseHttpClient, IReferralRockApiWrapper
     {
-        private readonly HttpClient _httpClient;
+        private readonly ReferralRockConfiguration _referralRockConfiguration;
 
-        public ReferralRockApiWrapper(HttpClient httpClient)
+        public ReferralRockApiWrapper(IHttpClientFactory httpClientFactory,
+                                        ReferralRockConfiguration referralRockConfiguration)
+            : base(httpClientFactory, "ReferralRock")
         {
-            _httpClient = httpClient;
+            _referralRockConfiguration = referralRockConfiguration;
         }
 
-        public async Task<T> GetAllMembersAsync<T>(MemberRequestParameter memberRequest)
-            where T : IList
+        public async Task<MemberResponse> GetAllMembersAsync(MemberRequestParameter memberRequest)
         {
             StringBuilder urlBuilder = new();
 
-            urlBuilder.Append("/members");
-            urlBuilder.Append($"?programId={memberRequest.ProgramId}");
-            urlBuilder.Append($"&query={memberRequest.Query}");
-            urlBuilder.Append($"&showDisabled={memberRequest.ShowDisabled}");
-            urlBuilder.Append($"&showDisabled={memberRequest.ShowDisabled}");
-            urlBuilder.Append($"&sort={memberRequest.Sort}");
-            urlBuilder.Append($"&dateFrom={memberRequest.DateFrom}");
-            urlBuilder.Append($"&dateTo={memberRequest.DateTo}");
-            urlBuilder.Append($"&offset={memberRequest.OffSet}");
-            urlBuilder.Append($"&count={memberRequest.Count}");
+            urlBuilder.Append("/api/members");
+            urlBuilder.Append($"?programId={_referralRockConfiguration.ProgramId}");
 
-            var response = await _httpClient.GetAsync(urlBuilder.ToString());
+            if (!string.IsNullOrEmpty(memberRequest.Query))
+                urlBuilder.Append($"&query={memberRequest.Query}");
+            if (memberRequest.ShowDisabled.HasValue)
+                urlBuilder.Append($"&showDisabled={memberRequest.ShowDisabled.Value}");
+            if (!string.IsNullOrEmpty(memberRequest.Sort))
+                urlBuilder.Append($"&sort={memberRequest.Sort}");
+            if (memberRequest.DateFrom.HasValue)
+                urlBuilder.Append($"&dateFrom={memberRequest.DateFrom.Value}");
+            if (memberRequest.DateTo.HasValue)
+                urlBuilder.Append($"&dateTo={memberRequest.DateTo.Value}");
+            if (memberRequest.OffSet.HasValue)
+                urlBuilder.Append($"&offset={memberRequest.OffSet}");
+            if (memberRequest.Count.HasValue)
+                urlBuilder.Append($"&count={memberRequest.Count}");
 
-            if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException(response.ReasonPhrase);
-
-            var httpResponse = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(httpResponse);
+            return await GetAsync<MemberResponse>(urlBuilder.ToString());
         }
     }
 }
