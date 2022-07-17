@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models;
-using ReferralRockIntegration.Web.Models;
-using System.Diagnostics;
 
 namespace ReferralRockIntegration.Web.Controllers
 {
