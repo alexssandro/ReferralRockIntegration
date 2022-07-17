@@ -2,7 +2,7 @@
 {
     public class MemberRequestParameter
     {
-        public string? Query { get; set; }
+        public string Query { get; set; }
         public bool? ShowDisabled { get; set; }
         public string Sort { get; set; }
         public DateTime? DateFrom { get; set; }

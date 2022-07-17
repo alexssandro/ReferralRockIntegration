@@ -16,10 +16,8 @@ namespace ReferralRockIntegration.Web.Controllers
         }
 
         [Route("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(MemberRequestParameter requestParameters)
         {
-            var requestParameters = new MemberRequestParameter();
-
             var members = await _referralRockApiWrapper.GetAllMembersAsync(requestParameters);
             return View(members);
         }

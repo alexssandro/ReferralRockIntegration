@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var appSettingsReferralRockSection = builder.Configuration.GetSection("ReferralRock");
 
-
 var referralRockConfiguration = appSettingsReferralRockSection.Get<ReferralRockConfiguration>();
 
 builder.Services.AddSingleton(referralRockConfiguration);
@@ -20,9 +19,9 @@ builder.Services.AddHttpClient("ReferralRock", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://api.referralrock.com");
 
-    var privateApiKey = appSettingsReferralRockSection.GetValue<string>("PrivateApiKey");
-    var publicApiKey = appSettingsReferralRockSection.GetValue<string>("PublicApiKey");
-    var keyBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{publicApiKey}:{privateApiKey}"));
+    var keys = $"{referralRockConfiguration.PublicApiKey}:{referralRockConfiguration.PrivateApiKey}";
+    var keyEnconding = Encoding.UTF8.GetBytes(keys);
+    var keyBase64 = Convert.ToBase64String(keyEnconding);
 
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", keyBase64);
 });
