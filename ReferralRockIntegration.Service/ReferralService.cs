@@ -1,6 +1,6 @@
 ﻿namespace ReferralRockIntegration.Service
 {
-    public class Class1
+    public class ReferralService
     {
 
     }
