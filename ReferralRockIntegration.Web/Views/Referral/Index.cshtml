@@ -8,10 +8,6 @@
 @section Styles {
 }
 
-<div>
-    @ViewData["Title"]
-</div>
-
 @if (!Model.Referrals.Any())
 {
     <div>
@@ -20,7 +16,15 @@
     return;
 }
 
+
 <div class="flex flex-col">
+    <div class="divide-y divide-slate-100">
+        <nav class="text-sm font-medium">
+            <ul class="flex space-x-3">
+                <li><a href="/referral/new/" class="block px-3 py-2 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">New</a></li>
+            </ul>
+        </nav>
+    </div>
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
             <div class="overflow-x-auto">
