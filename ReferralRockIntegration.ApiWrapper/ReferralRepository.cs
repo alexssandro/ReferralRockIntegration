@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
-using ReferralRockIntegration.ApiWrapper.Models;
 using ReferralRockIntegration.ApiWrapper.Models.Configuration;
+using ReferralRockIntegration.ApiWrapper.Models.HttpData;
 using ReferralRockIntegration.ApiWrapper.Models.Referral;
 using System.Text;
 

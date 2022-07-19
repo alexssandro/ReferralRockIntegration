@@ -1,4 +1,4 @@
-﻿namespace ReferralRockIntegration.ApiWrapper
+﻿namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
 {
     public abstract class RequestParameterBase
     {

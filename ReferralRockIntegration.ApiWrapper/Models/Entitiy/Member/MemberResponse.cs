@@ -1,4 +1,5 @@
-﻿using ReferralRockIntegration.ApiWrapper.Models.HttpData;
+﻿using ReferralRockIntegration.ApiWrapper.Models.Entitiy;
+using ReferralRockIntegration.ApiWrapper.Models.HttpData;
 using System.Text.Json.Serialization;
 
 namespace ReferralRockIntegration.ApiWrapper.Models.Member

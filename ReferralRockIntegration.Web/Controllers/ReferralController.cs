@@ -20,7 +20,7 @@ namespace ReferralRockIntegration.Web.Controllers
 
             var referrals = await _referralRepository.SearchAsync(requestParameter);
 
-            if (referrals == null || !referrals.Referrals.Any())
+            if (referrals == null)
                 return NotFound();
 
             return View(referrals);

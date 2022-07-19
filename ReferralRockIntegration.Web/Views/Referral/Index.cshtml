@@ -2,7 +2,7 @@
 @model ReferralResponse
 
 @{
-    ViewData["Title"] = $"{Model.Referrals[0].ReferringMemberName}'s referrals";
+    ViewData["Title"] = $"{(Model.Referrals.Any() ? $"{Model.Referrals[0].ReferringMemberName}''s referrals" : "")}";
 }
 
 @section Styles {
@@ -11,6 +11,15 @@
 <div>
     @ViewData["Title"]
 </div>
+
+@if (!Model.Referrals.Any())
+{
+    <div>
+        You don't have any referral, click <a href="/referral/new/@Model.">here</a> to register one
+    </div>
+    return;
+}
+
 <div class="flex flex-col">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">

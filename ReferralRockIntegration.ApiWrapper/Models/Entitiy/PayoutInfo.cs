@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReferralRockIntegration.ApiWrapper.Models
+namespace ReferralRockIntegration.ApiWrapper.Models.Entitiy
 {
     public class Payoutinfo
     {

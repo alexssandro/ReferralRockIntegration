@@ -1,4 +1,6 @@
-﻿namespace ReferralRockIntegration.ApiWrapper.Models.Member
+﻿using ReferralRockIntegration.ApiWrapper.Models.HttpData;
+
+namespace ReferralRockIntegration.ApiWrapper.Models.Member
 {
     public class MemberRequestParameter : RequestParameterBase
     {

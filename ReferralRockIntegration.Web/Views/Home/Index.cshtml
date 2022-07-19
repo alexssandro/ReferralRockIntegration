@@ -9,6 +9,9 @@
 @section Styles {
 }
 
+<div>
+    @ViewData["Title"]
+</div>
 <div class="flex flex-col">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
@@ -31,7 +34,7 @@
                             <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.DisplayName</td>
                             <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.Email</td>
                             <td>
-                                <a href="#!" class="text-purple-600 hover:text-purple-700 transition duration-300 ease-in-out mb-4">Secondary link</a>
+                                <a href="/referral/?memberId=@member.Id" class="text-purple-600 hover:text-purple-700 transition duration-300 ease-in-out mb-4">Referrals</a>
                             </td>
                         </tr>
                     }
