@@ -69,6 +69,8 @@ namespace ReferralRockIntegration.Web.Controllers
         [HttpDelete("{id:guid}")]
         public IActionResult Delete(string id)
         {
+
+
             return NoContent();
         }
     }

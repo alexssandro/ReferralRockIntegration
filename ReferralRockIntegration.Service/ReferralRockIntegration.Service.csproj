@@ -10,4 +10,8 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ReferralRockIntegration.ApiWrapper\ReferralRockIntegration.ApiWrapper.csproj" />
+  </ItemGroup>
+
 </Project>

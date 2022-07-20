@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ReferralRockIntegration.ApiWrapper\ReferralRockIntegration.ApiWrapper.csproj" />
+    <ProjectReference Include="..\ReferralRockIntegration.Service\ReferralRockIntegration.Service.csproj" />
   </ItemGroup>
 
 </Project>
