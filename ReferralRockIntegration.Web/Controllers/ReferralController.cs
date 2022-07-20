@@ -5,6 +5,7 @@ using ReferralRockIntegration.Web.Models;
 
 namespace ReferralRockIntegration.Web.Controllers
 {
+    [Route("ref")]
     public class ReferralController : Controller
     {
         private readonly IReferralRepository _referralRepository;
@@ -13,7 +14,7 @@ namespace ReferralRockIntegration.Web.Controllers
         {
             _referralRepository = referralRepository;
         }
-        
+
         public async Task<IActionResult> Index(ReferralRequestParameter requestParameter)
         {
             if (string.IsNullOrEmpty(requestParameter.MemberId))
@@ -25,6 +26,17 @@ namespace ReferralRockIntegration.Web.Controllers
                 return NotFound();
 
             return View(referrals);
+        }
+
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var referral = await _referralRepository.GetByIdAsync(id);
+
+            if (referral == null)
+                return NotFound();
+
+            return Ok(referral);
         }
 
         [HttpGet("create/{memberId:guid}")]

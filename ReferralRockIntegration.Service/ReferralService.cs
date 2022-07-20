@@ -12,19 +12,19 @@ namespace ReferralRockIntegration.Service
             _referralRepository = referralRepository;
         }
 
-        public async Task Add()
+        public async Task AddAsync()
         {
-            await _referralRepository.Add();
+            await _referralRepository.AddAsync();
         }
 
-        public async Task Edit()
+        public async Task EditAsync()
         {
-            await _referralRepository.Edit();
+            await _referralRepository.EditAsync();
         }
 
-        public async Task Remove()
+        public async Task RemoveAsync(string id)
         {
-            await _referralRepository.Remove();
+            await _referralRepository.RemoveAsync(id);
         }
     }
 }

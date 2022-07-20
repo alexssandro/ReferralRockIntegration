@@ -46,13 +46,13 @@ namespace ReferralRockIntegration.ApiWrapper
             return await GetAsync<ReferralResponse>(urlBuilder.ToString());
         }
 
-        public async Task<Referral> GetById(string id)
+        public async Task<Referral> GetByIdAsync(string id)
         {
             string url = $"/api/referral/getsingle?referralQuery={id}";
             return await GetAsync<Referral>(url);
         }
 
-        public async Task<object> Add()
+        public async Task<object> AddAsync()
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referrals");
@@ -60,14 +60,14 @@ namespace ReferralRockIntegration.ApiWrapper
             return await PostAsync<object>(urlBuilder.ToString(), new object());
         }
 
-        public async Task<object> Edit()
+        public async Task<object> EditAsync()
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referral/update");
             return await PostAsync<object>(urlBuilder.ToString(), new object());
         }
 
-        public async Task<object> Remove()
+        public async Task<object> RemoveAsync(string id)
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referral/remove");
