@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
+using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
 using ReferralRockIntegration.ApiWrapper.Models.Referral;
 using ReferralRockIntegration.Service.Interfaces;
 using ReferralRockIntegration.Web.Models;
@@ -11,14 +12,17 @@ namespace ReferralRockIntegration.Web.Controllers
     {
         private readonly IReferralRepository _referralRepository;
         private readonly IMemberRepository _memberRepository;
+        private readonly IReferralService _referralService;
 
         public ReferralController(INotifier notifier,
                                   IReferralRepository referralRepository,
-                                  IMemberRepository memberRepository)
+                                  IMemberRepository memberRepository,
+                                  IReferralService referralService)
             : base(notifier)
         {
             _referralRepository = referralRepository;
             _memberRepository = memberRepository;
+            _referralService = referralService;
         }
 
         [Route("")]
@@ -27,7 +31,12 @@ namespace ReferralRockIntegration.Web.Controllers
             if (string.IsNullOrEmpty(requestParameter.MemberId))
                 return NotFound();
 
-            var member = await _memberRepository.GetByIdAsync(requestParameter.MemberId);
+            bool validGuid = Guid.TryParse(requestParameter.MemberId, out _);
+
+            if (!validGuid)
+                return NotFound();
+
+            var member = await _memberRepository.GetByCodeAsync(requestParameter.MemberId);
 
             if (member == null)
                 return NotFound();
@@ -35,14 +44,22 @@ namespace ReferralRockIntegration.Web.Controllers
             var referrals = await _referralRepository.SearchAsync(requestParameter);
 
             ViewBag.PageTitle = $"{member.FirstName} Referrals";
-            ViewBag.MemberId = requestParameter.MemberId;
-            return View(referrals);
+
+            var referralsViewModel = new ReferralsViewModel
+            {
+                MemberId = member.Id,
+                MemberName = member.FirstName,
+                ReferringCode = member.ReferralCode,
+                ReferralResponse = referrals
+            };
+
+            return View(referralsViewModel);
         }
 
-        [Route("{id:guid}")]
-        public async Task<IActionResult> GetById(string id)
+        [Route("{code:guid}")]
+        public async Task<IActionResult> GetByCode(string code)
         {
-            var referral = await _referralRepository.GetByIdAsync(id);
+            var referral = await _referralRepository.GetByCodeAsync(code);
 
             if (referral == null)
                 return NotFound();
@@ -50,13 +67,13 @@ namespace ReferralRockIntegration.Web.Controllers
             return Ok(referral);
         }
 
-        [HttpGet("create/{memberId:guid}")]
-        public async Task<IActionResult> Create(string memberId)
+        [HttpGet("create/{referralCode}")]
+        public async Task<IActionResult> Create(string referralCode)
         {
-            if (string.IsNullOrEmpty(memberId))
+            if (string.IsNullOrEmpty(referralCode))
                 return NotFound();
 
-            var member = await _memberRepository.GetByIdAsync(memberId);
+            var member = await _memberRepository.GetByCodeAsync(referralCode);
 
             if (member == null)
                 return NotFound();
@@ -65,48 +82,54 @@ namespace ReferralRockIntegration.Web.Controllers
 
             var referral = new ReferralViewModel
             {
-                MemberId = memberId
+                ReferralCode = referralCode
             };
+
             return View(referral);
         }
 
         [HttpPost("create")]
-        public IActionResult Create(ReferralViewModel referralViewModel)
+        public async Task<IActionResult> Create(ReferralViewModel referralViewModel)
         {
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
-            return Redirect($"/ref/actionresult/{referralViewModel.MemberId}/{referralViewModel.Id}");
+            var referralRegister = new ReferralRegister
+            {
+                Email = referralViewModel.Email,
+                FirstName = referralViewModel.FirstName,
+                LastName = referralViewModel.LastName,
+                ReferralCode = referralViewModel.ReferralCode
+            };
+
+            await _referralService.AddAsync(referralRegister);
+
+            return CustomResponse(referralRegister);
+
+            //return Redirect($"/ref/actionresult/{referralViewModel.ReferralCode}/{referralViewModel.Id}");
         }
 
-        //[HttpGet("actionresult/{memberId:guid}/{referralId:guid}")]
-        [HttpGet("actionresult/{memberId}/{referralId}")]
-        public async Task<IActionResult> ShowResult(string memberId, string referralId)
+        [HttpGet("actionresult/{referralCode:guid}/{referralId:guid}")]
+        public async Task<IActionResult> ShowResult(string referralCode, string referralId)
         {
-            //if (string.IsNullOrEmpty(memberId) || string.IsNullOrEmpty(referralId))
-            //    return NotFound();
-            //
-            //var member = await _memberRepository.GetByIdAsync(memberId);
-            //
-            //if (member == null)
-            //    return NotFound();
-            //
-            //var referral = await _referralRepository.GetByIdAsync(referralId);
-            //
-            //if (referral == null)
-            //    return NotFound();
-            //
-            //var referralResult = new ReferralResultViewModel
-            //{
-            //    ReferralName = referral.FullName,
-            //    MemberName = $"{member.FirstName} {member.LastName}"
-            //};
+            if (string.IsNullOrEmpty(referralCode) || string.IsNullOrEmpty(referralId))
+                return NotFound();
+
+            var member = await _memberRepository.GetByCodeAsync(referralCode);
+
+            if (member == null)
+                return NotFound();
+
+            var referral = await _referralRepository.GetByCodeAsync(referralId);
+
+            if (referral == null)
+                return NotFound();
 
             var referralResult = new ReferralResultViewModel
             {
-                MemberId = memberId,
-                ReferralName = "John Referral",
-                MemberName = "Steve Member"
+                ReferralCode = referralCode,
+                ReferralName = referral.FullName,
+                MemberName = $"{member.FirstName} {member.LastName}"
             };
 
             return View(referralResult);
@@ -118,7 +141,7 @@ namespace ReferralRockIntegration.Web.Controllers
         {
             var referral = new ReferralViewModel
             {
-                MemberId = memberId
+                ReferralCode = memberId
             };
             return View(referral);
         }

@@ -1,21 +1,39 @@
 ﻿using ReferralRockIntegration.ApiWrapper.Interfaces;
+using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
 using ReferralRockIntegration.Service.Interfaces;
 
 namespace ReferralRockIntegration.Service
 {
     public class ReferralService : BaseService, IReferralService
     {
+        private readonly IMemberRepository _memberRepository;
         private readonly IReferralRepository _referralRepository;
 
-        public ReferralService(INotifier notifier, IReferralRepository referralRepository)
-            :base(notifier)
+        public ReferralService(INotifier notifier,
+                                IReferralRepository referralRepository,
+                                IMemberRepository memberRepository)
+            : base(notifier)
         {
             _referralRepository = referralRepository;
+            _memberRepository = memberRepository;
         }
 
-        public async Task AddAsync()
+        public async Task AddAsync(ReferralRegister referralRegister)
         {
-            await _referralRepository.AddAsync();
+            var member = await _memberRepository.GetByCodeAsync(referralRegister.ReferralCode);
+
+            if (member == null)
+            {
+                Notify("Referral Code must be valid", "ReferralCode");
+            }
+
+            if (_notifier.HasNotification())
+                return;
+
+            var response = await _referralRepository.AddAsync(referralRegister);
+
+            if (response.Message != "Referral Added")
+                Notify($"Failed to register, reason: {response.Message}");
         }
 
         public async Task EditAsync()

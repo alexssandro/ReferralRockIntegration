@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ReferralRockIntegration.ApiWrapper\ReferralRockIntegration.ApiWrapper.csproj" />
   </ItemGroup>
 

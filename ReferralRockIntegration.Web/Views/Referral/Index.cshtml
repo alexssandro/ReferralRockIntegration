@@ -1,14 +1,14 @@
 ﻿@using ReferralRockIntegration.ApiWrapper.Models.Referral
-@model ReferralResponse
+@model ReferralsViewModel
 
 @{
-    ViewData["Title"] = $"{(Model.Referrals.Any() ? $"{Model.Referrals[0].ReferringMemberName}''s referrals" : "")}";
+    ViewData["Title"] = @ViewBag.PageTitle;
 }
 
 @section Styles {
 }
 
-    @if (!Model.Referrals.Any())
+    @if (!Model.ReferralResponse.Referrals.Any())
 {
     <div>
         You don't have any referral, click <a href="/ref/create/@ViewBag.MemberId">here</a> to register one
@@ -21,7 +21,7 @@
     <div class="divide-y divide-slate-100">
         <nav class="text-sm font-medium">
             <ul class="flex space-x-3">
-                <li><a href="/ref/create/@ViewBag.MemberId" class="block px-3 py-2 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Create</a></li>
+                <li><a href="/ref/create/@Model.ReferringCode" class="block px-3 py-2 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Create</a></li>
             </ul>
         </nav>
     </div>
@@ -41,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var member in Model.Referrals)
+                        @foreach (var member in Model.ReferralResponse.Referrals)
                         {
                             <tr class="border-b">
                                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.DisplayName</td>

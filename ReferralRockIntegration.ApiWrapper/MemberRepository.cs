@@ -44,9 +44,14 @@ namespace ReferralRockIntegration.ApiWrapper
             return await GetAsync<MemberResponse>(urlBuilder.ToString());
         }
 
-        public async Task<Member> GetByIdAsync(string id)
+        /// <summary>
+        /// Gets the member by specified code
+        /// </summary>
+        /// <param name="code">values possible for code: e-mail, id, external id, and referral code</param>
+        /// <returns>Member instance if exists</returns>
+        public async Task<Member> GetByCodeAsync(string code)
         {
-            var memberResponse = await SearchAsync(new MemberRequestParameter { Query = id });
+            var memberResponse = await SearchAsync(new MemberRequestParameter { Query = code });
 
             if (memberResponse == null || !memberResponse.Members.Any())
                 return null;

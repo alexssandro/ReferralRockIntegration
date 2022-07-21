@@ -1,8 +1,10 @@
-﻿namespace ReferralRockIntegration.Service.Interfaces
+﻿using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
+
+namespace ReferralRockIntegration.Service.Interfaces
 {
     public interface IReferralService
     {
-        Task AddAsync();
+        Task AddAsync(ReferralRegister referralRegister);
         Task EditAsync();
         Task RemoveAsync(string id);
     }

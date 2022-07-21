@@ -14,8 +14,6 @@ var appSettingsReferralRockSection = builder.Configuration.GetSection("ReferralR
 var referralRockConfiguration = appSettingsReferralRockSection.Get<ReferralRockConfiguration>();
 
 builder.Services.AddSingleton(referralRockConfiguration);
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<INotifier, Notifier>();
 builder.Services.AddScoped<IReferralService, ReferralService>();
