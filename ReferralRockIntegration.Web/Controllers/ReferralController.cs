@@ -102,14 +102,15 @@ namespace ReferralRockIntegration.Web.Controllers
                 ReferralCode = referralViewModel.ReferralCode
             };
 
-            await _referralService.AddAsync(referralRegister);
+            var response = await _referralService.AddAsync(referralRegister);
 
-            return CustomResponse(referralRegister);
+            if (!ValidOperation())
+                return View(referralViewModel);
 
-            //return Redirect($"/ref/actionresult/{referralViewModel.ReferralCode}/{referralViewModel.Id}");
+            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
         }
 
-        [HttpGet("actionresult/{referralCode:guid}/{referralId:guid}")]
+        [HttpGet("actionresult/{referralCode}/{referralId:guid}")]
         public async Task<IActionResult> ShowResult(string referralCode, string referralId)
         {
             if (string.IsNullOrEmpty(referralCode) || string.IsNullOrEmpty(referralId))
@@ -127,6 +128,7 @@ namespace ReferralRockIntegration.Web.Controllers
 
             var referralResult = new ReferralResultViewModel
             {
+                MemberId = member.Id,
                 ReferralCode = referralCode,
                 ReferralName = referral.FullName,
                 MemberName = $"{member.FirstName} {member.LastName}"

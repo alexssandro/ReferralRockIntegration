@@ -11,7 +11,7 @@
     @if (!Model.ReferralResponse.Referrals.Any())
 {
     <div>
-        You don't have any referral, click <a href="/ref/create/@ViewBag.MemberId">here</a> to register one
+        You don't have any referral, click <a href="/ref/create/@Model.ReferringCode">here</a> to register one
     </div>
     return;
 }

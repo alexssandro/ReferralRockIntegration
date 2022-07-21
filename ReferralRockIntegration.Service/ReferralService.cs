@@ -1,5 +1,6 @@
 ﻿using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
+using ReferralRockIntegration.ApiWrapper.Models.Referral;
 using ReferralRockIntegration.Service.Interfaces;
 
 namespace ReferralRockIntegration.Service
@@ -18,7 +19,7 @@ namespace ReferralRockIntegration.Service
             _memberRepository = memberRepository;
         }
 
-        public async Task AddAsync(ReferralRegister referralRegister)
+        public async Task<ReferralRegisterResponse> AddAsync(ReferralRegister referralRegister)
         {
             var member = await _memberRepository.GetByCodeAsync(referralRegister.ReferralCode);
 
@@ -28,12 +29,14 @@ namespace ReferralRockIntegration.Service
             }
 
             if (_notifier.HasNotification())
-                return;
+                return null; ;
 
             var response = await _referralRepository.AddAsync(referralRegister);
 
             if (response.Message != "Referral Added")
                 Notify($"Failed to register, reason: {response.Message}");
+
+            return response;
         }
 
         public async Task EditAsync()

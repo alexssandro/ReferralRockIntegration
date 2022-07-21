@@ -6,11 +6,11 @@ using ReferralRockIntegration.Service.Interfaces;
 namespace ReferralRockIntegration.Web.Controllers
 {
     [Route("")]
-    public class HomeController : MainController
+    public class MemberController : MainController
     {
         private readonly IMemberRepository _referralRockApiWrapper;
 
-        public HomeController(INotifier notifier, IMemberRepository referralRockApiWrapper)
+        public MemberController(INotifier notifier, IMemberRepository referralRockApiWrapper)
             :base(notifier)
         {
             _referralRockApiWrapper = referralRockApiWrapper;
