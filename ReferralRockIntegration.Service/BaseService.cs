@@ -14,7 +14,7 @@ namespace ReferralRockIntegration.Service
 
         protected void Notify(string message, string field = null)
         {
-            _notifier.Handle(new Notification(message, field));
+            _notifier.Handle(new Notification(field, message));
         }
     }
 }

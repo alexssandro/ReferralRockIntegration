@@ -1,4 +1,4 @@
-﻿using ReferralRockIntegration.ApiWrapper.Models.Referral;
+﻿using ReferralRockIntegration.ApiWrapper.Models.Referrals;
 
 namespace ReferralRockIntegration.Web.Models
 {

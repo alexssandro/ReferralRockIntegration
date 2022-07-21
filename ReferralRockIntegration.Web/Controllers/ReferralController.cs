@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
-using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
-using ReferralRockIntegration.ApiWrapper.Models.Referral;
+using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referrals;
+using ReferralRockIntegration.ApiWrapper.Models.Referrals;
 using ReferralRockIntegration.Service.Interfaces;
 using ReferralRockIntegration.Web.Models;
+using ReferralRockIntegration.Web.Models.Enum;
 
 namespace ReferralRockIntegration.Web.Controllers
 {
@@ -82,7 +83,9 @@ namespace ReferralRockIntegration.Web.Controllers
 
             var referral = new ReferralViewModel
             {
-                ReferralCode = referralCode
+                MemberId = member.Id,
+                ReferralCode = referralCode,
+                FormAction = FormAction.Create
             };
 
             return View(referral);
@@ -92,7 +95,7 @@ namespace ReferralRockIntegration.Web.Controllers
         public async Task<IActionResult> Create(ReferralViewModel referralViewModel)
         {
             if (!ModelState.IsValid)
-                return CustomResponse(ModelState);
+                return View(referralViewModel);
 
             var referralRegister = new ReferralRegister
             {
@@ -104,7 +107,7 @@ namespace ReferralRockIntegration.Web.Controllers
 
             var response = await _referralService.AddAsync(referralRegister);
 
-            if (!ValidOperation())
+            if (IsThereAnyError())
                 return View(referralViewModel);
 
             return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
@@ -138,23 +141,61 @@ namespace ReferralRockIntegration.Web.Controllers
         }
 
 
-        [HttpGet("edit/{memberId:guid}/{id:guid}")]
-        public IActionResult Edit(string memberId, string id)
+        [HttpGet("edit/{referralCode}/{id:guid}")]
+        public async Task<IActionResult> Edit(string referralCode, string id)
         {
-            var referral = new ReferralViewModel
+            if (string.IsNullOrEmpty(referralCode) || string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var member = await _memberRepository.GetByCodeAsync(referralCode);
+
+            if (member == null)
+                return NotFound();
+
+            var referral = await _referralRepository.GetByCodeAsync(id);
+
+            if (referral == null)
+                return NotFound();
+
+            ViewBag.PageTitle = $"Create a new {member.FirstName}'s referral";
+
+            var referralViewModel = new ReferralViewModel
             {
-                ReferralCode = memberId
+                Id = id,
+                ReferralCode = referralCode,
+                MemberId = member.Id,
+                Email = referral.Email,
+                FirstName = referral.FirstName,
+                LastName = referral.LastName,
+                FormAction = FormAction.Update
             };
-            return View(referral);
+            return View(referralViewModel);
         }
 
         [HttpPost("edit")]
-        public IActionResult Edit(ReferralViewModel referralViewModel)
+        public async Task<IActionResult> Edit(ReferralViewModel referralViewModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (referralViewModel == null)
+                return NotFound();
 
-            return View(referralViewModel);
+            if (!ModelState.IsValid)
+                return View(referralViewModel);
+
+            var referralRegister = new ReferralRegister
+            {
+                Id = referralViewModel.Id,
+                Email = referralViewModel.Email,
+                FirstName = referralViewModel.FirstName,
+                LastName = referralViewModel.LastName,
+                ReferralCode = referralViewModel.ReferralCode
+            };
+
+            var response = await _referralService.EditAsync(referralRegister);
+
+            if (IsThereAnyError())
+                return View(referralViewModel);
+
+            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
         }
 
         [HttpDelete("{id:guid}")]

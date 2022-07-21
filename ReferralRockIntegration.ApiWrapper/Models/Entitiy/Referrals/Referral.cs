@@ -1,7 +1,7 @@
 ﻿using ReferralRockIntegration.ApiWrapper.Models.Entitiy;
 using System.Text.Json.Serialization;
 
-namespace ReferralRockIntegration.ApiWrapper.Models.Referral
+namespace ReferralRockIntegration.ApiWrapper.Models.Referrals
 {
     public class Referral : ReferralRockEntity
     {

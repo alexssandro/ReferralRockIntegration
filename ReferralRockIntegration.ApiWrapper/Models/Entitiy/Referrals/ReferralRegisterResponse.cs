@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReferralRockIntegration.ApiWrapper.Models.Referral
+namespace ReferralRockIntegration.ApiWrapper.Models.Referrals
 {
     public class ReferralRegisterResponse
     {

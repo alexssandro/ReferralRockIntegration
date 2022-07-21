@@ -1,14 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral
+namespace ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referrals
 {
     public class ReferralRegister
     {
-        public ReferralRegister()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         [JsonPropertyName("id")]
         public string Id { get; set; }
         [JsonPropertyName("referralCode")]

@@ -62,26 +62,26 @@ namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
             return await CreateResponseData<T>(response);
         }
 
-        private StringContent CreateRequestPayload(object data)
+        private static StringContent CreateRequestPayload(object data)
         {
             string requestPayload = JsonSerializer.Serialize(data);
             var content = new StringContent(requestPayload, Encoding.UTF8, "application/json");
             return content;
         }
 
-        private async Task<string> GetBodyResponse(HttpResponseMessage response)
+        private static async Task<string> GetBodyResponse(HttpResponseMessage response)
         {
             var bodyResponse = await response.Content.ReadAsStringAsync();
             return bodyResponse;
         }
 
-        private async Task<T> CreateResponseData<T>(HttpResponseMessage response) where T : class
+        private static async Task<T> CreateResponseData<T>(HttpResponseMessage response) where T : class
         {
             var bodyResponse = await GetBodyResponse(response);
             return JsonSerializer.Deserialize<T>(bodyResponse);
         }
 
-        private void CheckResponseResult(HttpResponseMessage response)
+        private static void CheckResponseResult(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

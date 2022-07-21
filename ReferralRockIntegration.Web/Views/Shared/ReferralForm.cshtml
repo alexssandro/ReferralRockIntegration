@@ -1,0 +1,39 @@
+﻿@using ReferralRockIntegration.Web.Models.Enum
+@model ReferralRockIntegration.Web.Models.ReferralViewModel
+
+@{
+    string urlAction = @Model.FormAction == FormAction.Create ? "/ref/create" : "/ref/edit";
+    string buttonAction = @Model.FormAction == FormAction.Create ? "Create" : "Update";
+    ViewData["Title"] = $"{buttonAction} Referral";
+}
+
+<div class="flex flex-col">
+    <div class="col-md-4">
+        <form action="@urlAction" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-red-600"></div>
+
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="ReferralCode" type="hidden" />
+
+            <div class="form-group">
+                <label asp-for="FirstName" class="text-gray-600 font-light"></label>
+                <input asp-for="FirstName" class="w-full mt-2 px-6 py-3 border rounded-lg text-lg text-gray-700 focus:outline-none" maxlength="20" />
+                <span asp-validation-for="FirstName" class="text-red-600 mb-2"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="text-gray-600 font-light"></label>
+                <input asp-for="LastName" class="w-full mt-2 px-6 py-3 border rounded-lg text-lg text-gray-700 focus:outline-none" maxlength="20" />
+                <span asp-validation-for="LastName" class="text-red-600 mb-2"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="text-gray-600 font-light"></label>
+                <input asp-for="Email" class="w-full mt-2 px-6 py-3 border rounded-lg text-lg text-gray-700 focus:outline-none" />
+                <span asp-validation-for="Email" class="text-red-600 mb-2"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@buttonAction" class="w-full block px-7 py-3 mt-4 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" />
+                <a href="/ref/?MemberId=@Model.MemberId" class="w-full inline-block block px-7 py-3 mt-1 text-center rounded-md px-6 py-2 border-2 border-blue-400 text-blue-300 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">Get back to referrals list</a>
+            </div>
+        </form>
+    </div>
+</div>

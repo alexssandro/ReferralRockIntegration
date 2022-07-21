@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models.Configuration;
-using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referral;
+using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referrals;
 using ReferralRockIntegration.ApiWrapper.Models.HttpData;
-using ReferralRockIntegration.ApiWrapper.Models.Referral;
+using ReferralRockIntegration.ApiWrapper.Models.Referrals;
 using System.Text;
 
 namespace ReferralRockIntegration.ApiWrapper
@@ -57,15 +57,16 @@ namespace ReferralRockIntegration.ApiWrapper
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referrals");
-
             return await PostAsync<ReferralRegisterResponse>(urlBuilder.ToString(), referralRegister);
         }
 
-        public async Task<object> EditAsync()
+        public async Task<UpdateReferralInfoResponse> EditAsync(UpdateReferralInfo[] referralRegister)
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referral/update");
-            return await PostAsync<object>(urlBuilder.ToString(), new object());
+
+            var result = await PostAsync<UpdateReferralInfoResponse[]>(urlBuilder.ToString(), referralRegister);
+            return result[0];
         }
 
         public async Task<object> RemoveAsync(string id)

@@ -1,6 +1,6 @@
 ﻿using ReferralRockIntegration.ApiWrapper.Models.HttpData;
 
-namespace ReferralRockIntegration.ApiWrapper.Models.Referral
+namespace ReferralRockIntegration.ApiWrapper.Models.Referrals
 {
     public class ReferralRequestParameter : RequestParameterBase
     {

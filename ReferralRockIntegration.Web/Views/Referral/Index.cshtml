@@ -1,4 +1,4 @@
-﻿@using ReferralRockIntegration.ApiWrapper.Models.Referral
+﻿@using ReferralRockIntegration.ApiWrapper.Models.Referrals
 @model ReferralsViewModel
 
 @{
@@ -25,17 +25,17 @@
             </ul>
         </nav>
     </div>
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="sm:-mx-6 lg:-mx-8">
         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
             <div class="overflow-x-auto">
-                <table class="min-w-full">
+                <table class="min-w-full overflow-x-auto">
                     <thead class="border-b">
                         <tr>
                             <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                Name
+                                Referral
                             </th>
                             <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                E-mail
+                                Created At
                             </th>
                             <th></th>
                         </tr>
@@ -45,13 +45,16 @@
                         {
                             <tr class="border-b">
                                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.DisplayName</td>
-                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.Email</td>
+                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.CreateDate</td>
                                 <td class="text-lg text-blue-400">
-                                    <a href="/ref/remove/@ViewBag.MemberId" alt="edit referral" class="hover:text-blue-700 p-2">
+                                    <a href="/ref/edit/@member.MemberReferralCode/@member.Id" alt="edit referral" class="hover:text-blue-700 p-2">
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a href="/ref/create/@ViewBag.MemberId" alt="delete referral" class="hover:text-blue-700">
                                         <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    <a href="/" class="">
+                                        <i class="fa-solid fa-arrow-rotate-left"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -60,5 +63,10 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="w-full">
+        <a href="/" class="text-blue-400" >
+            Get back to members list
+        </a>
     </div>
 </div>
