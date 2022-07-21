@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models.Member;
+using ReferralRockIntegration.Service.Interfaces;
 
 namespace ReferralRockIntegration.Web.Controllers
 {
-    public class HomeController : Controller
+    [Route("")]
+    public class HomeController : MainController
     {
         private readonly IMemberRepository _referralRockApiWrapper;
 
-        public HomeController(IMemberRepository referralRockApiWrapper)
+        public HomeController(INotifier notifier, IMemberRepository referralRockApiWrapper)
+            :base(notifier)
         {
             _referralRockApiWrapper = referralRockApiWrapper;
         }
@@ -16,6 +19,7 @@ namespace ReferralRockIntegration.Web.Controllers
         [Route("")]
         public async Task<IActionResult> Index(MemberRequestParameter requestParameters)
         {
+            ViewBag.PageTitle = "Members";
             var members = await _referralRockApiWrapper.SearchAsync(requestParameters);
             return View(members);
         }

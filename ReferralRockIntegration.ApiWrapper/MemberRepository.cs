@@ -10,7 +10,7 @@ namespace ReferralRockIntegration.ApiWrapper
     public class MemberRepository : BaseHttpClient, IMemberRepository
     {
         private readonly ReferralRockConfiguration _referralRockConfiguration;
-        
+
         public MemberRepository(IHttpClientFactory httpClientFactory,
                                         ReferralRockConfiguration referralRockConfiguration,
                                         ILogger<MemberRepository> logger)
@@ -42,6 +42,16 @@ namespace ReferralRockIntegration.ApiWrapper
                 urlBuilder.Append($"&count={memberRequest.Count}");
 
             return await GetAsync<MemberResponse>(urlBuilder.ToString());
+        }
+
+        public async Task<Member> GetByIdAsync(string id)
+        {
+            var memberResponse = await SearchAsync(new MemberRequestParameter { Query = id });
+
+            if (memberResponse == null || !memberResponse.Members.Any())
+                return null;
+
+            return memberResponse.Members.FirstOrDefault();
         }
     }
 }

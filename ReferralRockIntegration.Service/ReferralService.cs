@@ -3,11 +3,12 @@ using ReferralRockIntegration.Service.Interfaces;
 
 namespace ReferralRockIntegration.Service
 {
-    public class ReferralService : IReferralService
+    public class ReferralService : BaseService, IReferralService
     {
         private readonly IReferralRepository _referralRepository;
 
-        public ReferralService(IReferralRepository referralRepository)
+        public ReferralService(INotifier notifier, IReferralRepository referralRepository)
+            :base(notifier)
         {
             _referralRepository = referralRepository;
         }

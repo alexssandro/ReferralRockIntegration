@@ -8,10 +8,10 @@
 @section Styles {
 }
 
-@if (!Model.Referrals.Any())
+    @if (!Model.Referrals.Any())
 {
     <div>
-        You don't have any referral, click <a href="/referral/new/@Model.">here</a> to register one
+        You don't have any referral, click <a href="/ref/create/@ViewBag.MemberId">here</a> to register one
     </div>
     return;
 }
@@ -21,7 +21,7 @@
     <div class="divide-y divide-slate-100">
         <nav class="text-sm font-medium">
             <ul class="flex space-x-3">
-                <li><a href="/referral/new/" class="block px-3 py-2 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">New</a></li>
+                <li><a href="/ref/create/@ViewBag.MemberId" class="block px-3 py-2 rounded-md text-white bg-blue-400 hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Create</a></li>
             </ul>
         </nav>
     </div>
@@ -37,19 +37,25 @@
                             <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                 E-mail
                             </th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var member in Model.Referrals)
-                    {
-                        <tr class="border-b">
-                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.DisplayName</td>
-                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.Email</td>
-                            <td>
-                                <a href="#!" class="text-purple-600 hover:text-purple-700 transition duration-300 ease-in-out mb-4">Secondary link</a>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var member in Model.Referrals)
+                        {
+                            <tr class="border-b">
+                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.DisplayName</td>
+                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">@member.Email</td>
+                                <td class="text-lg text-blue-400">
+                                    <a href="/ref/remove/@ViewBag.MemberId" alt="edit referral" class="hover:text-blue-700 p-2">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="/ref/create/@ViewBag.MemberId" alt="delete referral" class="hover:text-blue-700">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

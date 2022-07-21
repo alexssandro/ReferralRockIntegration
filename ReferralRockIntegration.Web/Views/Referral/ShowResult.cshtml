@@ -1,0 +1,12 @@
+﻿@model ReferralResultViewModel
+
+<div class="w-full place-self-center self-auto bg-green-100 rounded-lg py-5 px-6 mb-4 text-base text-green-700" role="alert">
+    <h4 class="text-2xl font-medium leading-tight mb-2">Well done!</h4>
+    <p class="mb-4">
+        The referral @Model.ReferralName (referred by @Model.MemberName has been successfully registered!
+    </p>
+    <hr class="border-green-600 opacity-30">
+    <p class="mt-4 mb-0">
+        click <a href="/ref/?MemberId=@ViewBag.MemberId" class="font-bold hover:text-green-900">here</a> to get back to referral list
+    </p>
+</div>

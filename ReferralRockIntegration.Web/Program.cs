@@ -3,6 +3,7 @@ using ReferralRockIntegration.ApiWrapper.Interfaces;
 using ReferralRockIntegration.ApiWrapper.Models.Configuration;
 using ReferralRockIntegration.Service;
 using ReferralRockIntegration.Service.Interfaces;
+using ReferralRockIntegration.Service.Models.Notification;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -16,6 +17,7 @@ builder.Services.AddSingleton(referralRockConfiguration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<INotifier, Notifier>();
 builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IReferralRepository, ReferralRepository>();
