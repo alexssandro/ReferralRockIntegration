@@ -35,6 +35,9 @@ dotnet_diagnostic.IDE0008.severity = none
 # CS8600: Converting null literal or possible null value to non-nullable type.
 dotnet_diagnostic.CS8600.severity = none
 
+# CA1050: Declare types in namespaces
+dotnet_diagnostic.CA1050.severity = none
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4

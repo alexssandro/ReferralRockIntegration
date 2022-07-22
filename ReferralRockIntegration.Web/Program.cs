@@ -13,8 +13,9 @@ var appSettingsReferralRockSection = builder.Configuration.GetSection("ReferralR
 
 var referralRockConfiguration = appSettingsReferralRockSection.Get<ReferralRockConfiguration>();
 
-builder.Services.AddSingleton(referralRockConfiguration);
 builder.Services.AddControllersWithViews();
+builder.Services.AddHealthChecks();
+builder.Services.AddSingleton(referralRockConfiguration);
 builder.Services.AddScoped<INotifier, Notifier>();
 builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
@@ -53,4 +54,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Member}/{action=Index}/{id?}");
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHealthChecks("/healthcheck");
+});
+
 app.Run();
+public partial class Program { }

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ReferralRockIntegration.Web.IntegrationTests": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55654;http://localhost:55655"
+    }
+  }
+}
