@@ -6,7 +6,6 @@ using ReferralRockIntegration.ApiWrapper.Models.Member;
 using ReferralRockIntegration.ApiWrapper.Models.Referrals;
 using ReferralRockIntegration.Service.Interfaces;
 using ReferralRockIntegration.Web.Controllers;
-using ReferralRockIntegration.ApiWrapper.Models.Member;
 using ReferralRockIntegration.Web.Models;
 
 namespace ReferralRockIntegration.Web.Tests
@@ -68,9 +67,6 @@ namespace ReferralRockIntegration.Web.Tests
             {
                 MemberId = memberId
             };
-
-            _memberRepository.Setup(_ => _.GetByCodeAsync(memberId))
-                             .ReturnsAsync((Member)null);
 
             var result = await _referralController.Index(parameter);
 
