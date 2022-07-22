@@ -52,7 +52,7 @@ namespace ReferralRockIntegration.Web.Controllers
                 MemberName = member.FirstName,
                 ReferringCode = member.ReferralCode,
                 ReferralResponse = referrals
-            };
+            };  
 
             return View(referralsViewModel);
         }

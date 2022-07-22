@@ -29,6 +29,12 @@ dotnet_diagnostic.CS8625.severity = none
 # CS8601: Possible null reference assignment.
 dotnet_diagnostic.CS8601.severity = none
 
+# IDE0008: Use explicit type
+dotnet_diagnostic.IDE0008.severity = none
+
+# CS8600: Converting null literal or possible null value to non-nullable type.
+dotnet_diagnostic.CS8600.severity = none
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4

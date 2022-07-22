@@ -8,19 +8,19 @@ namespace ReferralRockIntegration.Web.Controllers
     [Route("")]
     public class MemberController : MainController
     {
-        private readonly IMemberRepository _referralRockApiWrapper;
+        private readonly IMemberRepository _memberRepository;
 
         public MemberController(INotifier notifier, IMemberRepository referralRockApiWrapper)
             :base(notifier)
         {
-            _referralRockApiWrapper = referralRockApiWrapper;
+            _memberRepository = referralRockApiWrapper;
         }
 
         [Route("")]
         public async Task<IActionResult> Index(MemberRequestParameter requestParameters)
         {
             ViewBag.PageTitle = "Members";
-            var members = await _referralRockApiWrapper.SearchAsync(requestParameters);
+            var members = await _memberRepository.SearchAsync(requestParameters);
             return View(members);
         }
     }
