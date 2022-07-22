@@ -1,0 +1,56 @@
+﻿@using ReferralRockIntegration.ApiWrapper.Models.Referrals
+@model Referral
+
+<div class="flex flex-col w-full">
+    <div class="w-full">
+        <h4 class="w-full text-center font-medium leading-tight text-2xl mt-0 mb-2 text-blue-600">Are you sure you want to delete <b>@Model.FirstName</b> referral?</h4>
+    </div>
+
+    <div class="flex justify-center space-x-2">
+        <input type="submit" id="confirmDelete" value="Confirm" class="p-2 block rounded-md text-lg text-white bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out" />
+        <a href="/ref/?MemberId=@Model.ReferringMemberId" class="p-2 block text-center text-md rounded-md border-2 border-blue-400 text-blue-300 leading-tight rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">Cancel</a>
+    </div>
+    <div id="alertDeleteSuccess" class="hidden bg-green-100 rounded-lg py-5 px-6 mb-4 mt-2 text-center text-green-700 mb-3" role="alert">
+        The referral has been successfully deleted, click <a class="font-bold" href="/ref/?MemberId=@Model.ReferringMemberId">here</a> to go back!
+    </div>
+</div>
+<input type="hidden" id="referralId" value="@Model.Id" />
+
+@section Scripts {
+    <script type="text/javascript">
+
+        let confirmDeleteButton;
+
+        window.onload = function() {
+            confirmDeleteButton = document.querySelector('#confirmDelete');
+            confirmDeleteButton.addEventListener("click", event => deleteReferral(event));
+        };
+
+        function deleteReferral(event) {
+            event.preventDefault();
+            confirmDeleteButton.setAttribute("disabled", "true");
+            confirmDeleteButton.classList.remove('bg-blue-700');
+            confirmDeleteButton.classList.add('bg-blue-300');
+            confirmDeleteButton.value = 'Deleting referral...';
+
+            let referralIdField = document.querySelector('#referralId');
+            let url = `/ref/${referralIdField.value}`
+            fetch(url, { method: 'DELETE' })
+                .then(Result => {
+                    confirmDeleteButton.value = 'Confirm';
+                    if (Result.status === 204) {
+                        let alertDeleteSuccess = document.querySelector('#alertDeleteSuccess');
+                        alertDeleteSuccess.classList.remove('hidden');
+                        return;
+                    }
+
+                    confirmDeleteButton.classList.remove('bg-blue-300');
+                    confirmDeleteButton.classList.add('bg-blue-700');
+                    confirmDeleteButton.removeAttribute('disabled');
+                })
+                .catch(errorMsg => { console.log(errorMsg); });
+        }
+
+
+    </script>
+}

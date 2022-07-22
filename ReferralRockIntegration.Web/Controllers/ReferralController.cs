@@ -198,8 +198,19 @@ namespace ReferralRockIntegration.Web.Controllers
             return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
         }
 
+        [HttpGet("delete/{referralId:guid}")]
+        public async Task<IActionResult> ConfirmDelete(string referralId)
+        {
+            var referral = await _referralRepository.GetByCodeAsync(referralId);
+
+            if (referral == null)
+                return NotFound();
+
+            return View(referral);
+        }
+        
         [HttpDelete("{id:guid}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             return NoContent();
         }
