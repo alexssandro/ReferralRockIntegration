@@ -76,15 +76,37 @@ namespace ReferralRockIntegration.Service
 
             var response = await _referralRepository.EditAsync(new UpdateReferralInfo[] { updateReferralInfo });
 
-            if (response.resultInfo.Status != "Succeeded")
-                Notify(response.resultInfo.Message);
+            if (response.ResultInfo.Status != "Succeeded")
+                Notify(response.ResultInfo.Message);
 
             return response;
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _referralRepository.RemoveAsync(id);
+            var referral = await _referralRepository.GetByCodeAsync(id);
+
+            if (referral == null)
+                Notify("The referral informed does not exists");
+
+            if (_notifier.HasNotification())
+                return;
+
+            var refferalRemoveInfo = new ReferralRemoveInfo
+            {
+                Query = new ReferralQuery
+                {
+                    PrimaryInfo = new Primaryinfo
+                    {
+                        ReferralId = id
+                    }
+                }
+            };
+
+            var response = await _referralRepository.RemoveAsync(new ReferralRemoveInfo[] { refferalRemoveInfo });
+
+            if (response.ResultInfo.Status != "Success")
+                Notify(response.ResultInfo.Message);
         }
     }
 }

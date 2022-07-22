@@ -69,11 +69,12 @@ namespace ReferralRockIntegration.ApiWrapper
             return result[0];
         }
 
-        public async Task<object> RemoveAsync(string id)
+        public async Task<ReferralRemoveInfoResponse> RemoveAsync(ReferralRemoveInfo[] referralRemoveInfo)
         {
             StringBuilder urlBuilder = new();
             urlBuilder.Append("/api/referral/remove");
-            return await PostAsync<object>(urlBuilder.ToString(), new object());
+            var result = await PostAsync<ReferralRemoveInfoResponse[]>(urlBuilder.ToString(), referralRemoveInfo);
+            return result[0];
         }
     }
 }

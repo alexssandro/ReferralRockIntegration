@@ -208,10 +208,15 @@ namespace ReferralRockIntegration.Web.Controllers
 
             return View(referral);
         }
-        
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(string id)
         {
+            await _referralService.RemoveAsync(id);
+
+            if (HasNotification())
+                return BadRequest(GetNotifications());
+
             return NoContent();
         }
     }

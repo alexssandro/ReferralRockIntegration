@@ -10,7 +10,7 @@ namespace ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referrals
         [JsonPropertyName("referral")]
         public Referral Referral { get; set; }
         [JsonPropertyName("resultInfo")]
-        public UpdateReferralResultInfo resultInfo { get; set; }
+        public UpdateReferralResultInfo ResultInfo { get; set; }
     }
 
     public class UpdateReferralResultInfo

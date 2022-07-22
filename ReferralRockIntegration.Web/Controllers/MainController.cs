@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using ReferralRockIntegration.Service.Interfaces;
+using ReferralRockIntegration.Service.Models.Notification;
 
 namespace ReferralRockIntegration.Web.Controllers
 {
@@ -31,6 +32,16 @@ namespace ReferralRockIntegration.Web.Controllers
         protected void NotifyError(string message, string field = null)
         {
             ModelState.AddModelError(field ?? "", message);
+        }
+
+        protected bool HasNotification()
+        {
+            return _notifier.HasNotification();
+        }
+
+        protected List<Notification> GetNotifications()
+        {
+            return _notifier.GetNotifications();
         }
     }
 }
