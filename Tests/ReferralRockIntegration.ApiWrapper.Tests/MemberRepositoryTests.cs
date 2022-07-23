@@ -129,7 +129,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
             httpMessageHandler.Protected().Verify("SendAsync",
                     Times.Exactly(1),
                     ItExpr.Is<HttpRequestMessage>(req =>
-                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&dateFrom=7/23/2022%2012:00:00%20AM"
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&dateFrom=07/23/2022%2000:00:00"
                          && req.Method == HttpMethod.Get
                     ),
                     ItExpr.IsAny<CancellationToken>());
@@ -151,7 +151,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
             httpMessageHandler.Protected().Verify("SendAsync",
                     Times.Exactly(1),
                     ItExpr.Is<HttpRequestMessage>(req =>
-                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&dateTo=7/22/2022%2012:00:00%20AM"
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&dateTo=07/22/2022%2000:00:00"
                          && req.Method == HttpMethod.Get
                     ),
                     ItExpr.IsAny<CancellationToken>());

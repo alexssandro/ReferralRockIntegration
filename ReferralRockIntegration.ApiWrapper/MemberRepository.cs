@@ -33,9 +33,9 @@ namespace ReferralRockIntegration.ApiWrapper
             if (!string.IsNullOrEmpty(memberRequest.Sort))
                 urlBuilder.Append($"&sort={memberRequest.Sort}");
             if (memberRequest.DateFrom.HasValue)
-                urlBuilder.Append($"&dateFrom={memberRequest.DateFrom.Value}");
+                urlBuilder.Append($"&dateFrom={memberRequest.DateFrom.Value:MM/dd/yyyy HH:mm:ss}");
             if (memberRequest.DateTo.HasValue)
-                urlBuilder.Append($"&dateTo={memberRequest.DateTo.Value}");
+                urlBuilder.Append($"&dateTo={memberRequest.DateTo.Value:MM/dd/yyyy HH:mm:ss}");
             if (memberRequest.OffSet.HasValue)
                 urlBuilder.Append($"&offset={memberRequest.OffSet}");
             if (memberRequest.Count.HasValue)
