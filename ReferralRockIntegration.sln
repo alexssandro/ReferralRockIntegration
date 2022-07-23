@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferralRockIntegration.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferralRockIntegration.Service.Tests", "Tests\ReferralRockIntegration.Service.Tests\ReferralRockIntegration.Service.Tests.csproj", "{E7A0C303-5A0C-4EEA-A48A-0D51FDEAEBF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferralRockIntegration.ApiWrapper.Tests", "Tests\ReferralRockIntegration.ApiWrapper.Tests\ReferralRockIntegration.ApiWrapper.Tests.csproj", "{ABCC6F3E-B31A-4C65-8F5C-AD8952871137}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{E7A0C303-5A0C-4EEA-A48A-0D51FDEAEBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A0C303-5A0C-4EEA-A48A-0D51FDEAEBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7A0C303-5A0C-4EEA-A48A-0D51FDEAEBF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABCC6F3E-B31A-4C65-8F5C-AD8952871137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABCC6F3E-B31A-4C65-8F5C-AD8952871137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABCC6F3E-B31A-4C65-8F5C-AD8952871137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABCC6F3E-B31A-4C65-8F5C-AD8952871137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{2AE7F25E-FB21-404F-9467-96BBAE71FB8A} = {10AA324C-C4B5-4C5B-ACFD-D4BD8D91A21D}
 		{302F895B-04F2-4371-B8E6-8A1C90FDC5A5} = {10AA324C-C4B5-4C5B-ACFD-D4BD8D91A21D}
 		{E7A0C303-5A0C-4EEA-A48A-0D51FDEAEBF8} = {10AA324C-C4B5-4C5B-ACFD-D4BD8D91A21D}
+		{ABCC6F3E-B31A-4C65-8F5C-AD8952871137} = {10AA324C-C4B5-4C5B-ACFD-D4BD8D91A21D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57A3C897-BE0E-4CBE-965E-BD9208E4E29D}

@@ -7,22 +7,23 @@ namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
     public abstract class BaseHttpClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
+        private readonly string _clientName;
 
         public BaseHttpClient(IHttpClientFactory httpClientFactory,
                               string clientName,
                               ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
-            _httpClient = _httpClientFactory.CreateClient(clientName);
             _logger = logger;
+            _clientName = clientName;
         }
 
         protected async Task<T> GetAsync<T>(string url) where T : class
         {
-            var response = await _httpClient.GetAsync(url);
-            
+            var httpClient = _httpClientFactory.CreateClient(_clientName);
+            var response = await httpClient.GetAsync(url);
+
             if (!response.IsSuccessStatusCode)
             {
                 var responseBody = await GetBodyResponse(response);
@@ -36,7 +37,8 @@ namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
         protected async Task<T> PostAsync<T>(string url, object data) where T : class
         {
             var content = CreateRequestPayload(data);
-            var response = await _httpClient.PostAsync(url, content);
+            var httpClient = _httpClientFactory.CreateClient(_clientName);
+            var response = await httpClient.PostAsync(url, content);
 
             CheckResponseResult(response);
 
@@ -46,7 +48,8 @@ namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
         protected async Task<T> PutAsync<T>(string url, object data) where T : class
         {
             var content = CreateRequestPayload(data);
-            var response = await _httpClient.PutAsync(url, content);
+            var httpClient = _httpClientFactory.CreateClient(_clientName);
+            var response = await httpClient.PutAsync(url, content);
 
             CheckResponseResult(response);
 
@@ -55,7 +58,8 @@ namespace ReferralRockIntegration.ApiWrapper.Models.HttpData
 
         protected async Task<T> PutAsync<T>(string url) where T : class
         {
-            var response = await _httpClient.DeleteAsync(url);
+            var httpClient = _httpClientFactory.CreateClient(_clientName);
+            var response = await httpClient.DeleteAsync(url);
 
             CheckResponseResult(response);
 
