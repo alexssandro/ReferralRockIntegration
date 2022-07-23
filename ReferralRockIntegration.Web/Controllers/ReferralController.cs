@@ -52,7 +52,7 @@ namespace ReferralRockIntegration.Web.Controllers
                 MemberName = member.FirstName,
                 ReferringCode = member.ReferralCode,
                 ReferralResponse = referrals
-            };  
+            };
 
             return View(referralsViewModel);
         }
@@ -157,7 +157,7 @@ namespace ReferralRockIntegration.Web.Controllers
             if (referral == null)
                 return NotFound();
 
-            ViewBag.PageTitle = $"Create a new {member.FirstName}'s referral";
+            ViewBag.PageTitle = $"Edit {referral.FirstName}, a {member.FirstName}'s referral";
 
             var referralViewModel = new ReferralViewModel
             {
@@ -212,6 +212,11 @@ namespace ReferralRockIntegration.Web.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(string id)
         {
+            var referral = await _referralRepository.GetByCodeAsync(id);
+
+            if (referral == null)
+                return NotFound();
+
             await _referralService.RemoveAsync(id);
 
             if (HasNotification())

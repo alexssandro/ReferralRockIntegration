@@ -9,6 +9,7 @@ using ReferralRockIntegration.Service.Interfaces;
 using ReferralRockIntegration.Service.Models.Notification;
 using ReferralRockIntegration.Web.Controllers;
 using ReferralRockIntegration.Web.Models;
+using ReferralRockIntegration.Web.Models.Enum;
 
 namespace ReferralRockIntegration.Web.Tests
 {
@@ -292,6 +293,261 @@ namespace ReferralRockIntegration.Web.Tests
             _referralController.ModelState["FirstName"].Errors.Count.Should().Be(1);
             _referralController.ModelState["LastName"].Errors.Count.Should().Be(1);
             _referralController.ModelState["Email"].Should().Be(null);
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenReferralCodeIsNotProvided_ShouldReturnNotfound()
+        {
+            string referralId = Guid.NewGuid().ToString();
+
+            var result = await _referralController.ShowResult(null, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenReferralIdIsNotProvided_ShouldReturnNotfound()
+        {
+            string referralId = null;
+            string referralCode = "1010";
+
+            var result = await _referralController.ShowResult(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenBothReferralIdAndReferralCodeAreNotProvided_ShouldReturnNotfound()
+        {
+            string referralId = null;
+            string referralCode = null;
+
+            var result = await _referralController.ShowResult(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenReferralCodeIsNotFound_ShouldReturnNotfound()
+        {
+            string referralId = Guid.NewGuid().ToString();
+            string referralCode = "1010";
+
+            var result = await _referralController.ShowResult(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenReferralIdIsNotFound_ShouldReturnNotfound()
+        {
+            string referralId = Guid.NewGuid().ToString();
+            string referralCode = "1010";
+
+            _memberRepository.Setup(_ => _.GetByCodeAsync(referralCode))
+                             .ReturnsAsync(new Member
+                             {
+                                 ReferralCode = referralCode
+                             });
+
+            var result = await _referralController.ShowResult(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ShowResult_WhenReferralCodeAndReferralIdAreFound_ShouldReturnViewResultWithData()
+        {
+            string referralId = Guid.NewGuid().ToString();
+            string referralCode = "1010";
+            string memberId = Guid.NewGuid().ToString();
+
+            _memberRepository.Setup(_ => _.GetByCodeAsync(referralCode))
+                             .ReturnsAsync(new Member
+                             {
+                                 Id = memberId,
+                                 ReferralCode = referralCode,
+                                 FirstName = "John",
+                                 LastName = "Wick"
+                             });
+
+            _referralRepository.Setup(_ => _.GetByCodeAsync(referralId))
+                               .ReturnsAsync(new Referral 
+                               {
+                                   FullName = "Larry Page"
+                               });
+
+            var result = await _referralController.ShowResult(referralCode, referralId);
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().BeOfType<ReferralResultViewModel>();
+            var referralResultViewModel = (ReferralResultViewModel)viewResult.Model;
+            referralResultViewModel.MemberId.Should().Be(memberId);
+            referralResultViewModel.ReferralCode.Should().Be(referralCode);
+            referralResultViewModel.ReferralName.Should().Be("Larry Page");
+            referralResultViewModel.MemberName.Should().Be("John Wick");
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenNoReferralCode_ShouldReturnNotfound()
+        {
+            string referralCode = null;
+            string referralId = Guid.NewGuid().ToString();
+
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenNoReferralId_ShouldReturnNotfound()
+        {
+            string referralCode = "1010";
+            string referralId = null;
+
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenNoReferralIdAndReferralCode_ShouldReturnNotfound()
+        {
+            string referralCode = null;
+            string referralId = null;
+
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenAnInexistingReferralCode_ShouldReturnNotfound()
+        {
+            string referralCode = "code1010";
+            string referralId = Guid.NewGuid().ToString();
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenAnInexistingReferralId_ShouldReturnNotfound()
+        {
+            string referralCode = "code1010";
+            string referralId = Guid.NewGuid().ToString();
+
+            _memberRepository.Setup(_ => _.GetByCodeAsync(referralCode))
+                             .ReturnsAsync(new Member
+                             {
+                                 ReferralCode = referralCode
+                             });
+
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_Edit_GivenAnExistingReferralCodeAndReferralId_ShouldReturnViewResultWithData()
+        {
+            string referralCode = "code1010";
+            string referralId = Guid.NewGuid().ToString();
+            string memberId = Guid.NewGuid().ToString();
+
+            _memberRepository.Setup(_ => _.GetByCodeAsync(referralCode))
+                             .ReturnsAsync(new Member
+                             {
+                                 FirstName = "Barack",
+                                 LastName = "Obama",
+                                 Email = "barackobama@gmail.com",
+                                 ReferralCode = referralCode,
+                                 Id = memberId
+                             });
+
+            _referralRepository.Setup(_ => _.GetByCodeAsync(referralId))
+                               .ReturnsAsync(new Referral
+                               {
+                                   Id = referralId,
+                                   FirstName = "Michael",
+                                   LastName = "Jordan",
+                                   Email = "michaeljordan@gmail.com"
+                               });
+
+            var result = await _referralController.Edit(referralCode, referralId);
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().BeOfType<ReferralViewModel>();
+            viewResult.ViewData["PageTitle"].Should().Be("Edit Michael, a Barack's referral");
+            var referralViewModel = (ReferralViewModel)viewResult.Model;
+            referralViewModel.Email.Should().Be("michaeljordan@gmail.com");
+            referralViewModel.FirstName.Should().Be("Michael");
+            referralViewModel.LastName.Should().Be("Jordan");
+            referralViewModel.ReferralCode.Should().Be(referralCode);
+            referralViewModel.MemberId.Should().Be(memberId);
+            referralViewModel.Id.Should().Be(referralId);
+            referralViewModel.FormAction.Should().Be(FormAction.Update);
+        }
+
+        [Fact]
+        public async Task Get_ConfirmDelete_WhenReferralIdIsNotFound_ShoulReturnNotFound()
+        {
+            string referralId = Guid.NewGuid().ToString();
+            var result = await _referralController.ConfirmDelete(referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Get_ConfirmDelete_WhenReferralIdIsFound_ShoulReturnViewResultWithData()
+        {
+            string referralId = Guid.NewGuid().ToString();
+
+            _referralRepository.Setup(_ => _.GetByCodeAsync(referralId))
+                               .ReturnsAsync(new Referral
+                               {
+                                   Id = referralId
+                               });
+
+            var result = await _referralController.ConfirmDelete(referralId);
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().BeOfType<Referral>();
+            viewResult.Model.Should().NotBeNull();
+        }
+        
+        [Fact] 
+        public async Task DeleteHttpMethod_Delete_WhenReferralIdIsNotFound_ShouldReturnNotFound()
+        {
+            string referralId = Guid.NewGuid().ToString();
+            var result = await _referralController.Delete(referralId);
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task DeleteHttpMethod_Delete_WhenNotificationComesFromServiceLayer_ShouldReturnBadRequest()
+        {
+            string referralId = Guid.NewGuid().ToString();
+
+            _referralRepository.Setup(_ => _.GetByCodeAsync(referralId))
+                               .ReturnsAsync(new Referral { Id = referralId });
+
+            _notifier.Setup(_ => _.HasNotification()).Returns(true);
+            _notifier.Setup(_ => _.GetNotifications())
+                     .Returns(new List<Notification>
+                     {
+                         new Notification(null, "Remove referral was not possible")
+                     });
+
+            var result = await _referralController.Delete(referralId);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            var badRequestResult = (BadRequestObjectResult)result;
+            badRequestResult.Value.Should().BeOfType<List<Notification>>();
+            var notifications = (List<Notification>)badRequestResult.Value;
+            notifications.Count.Should().Be(1);
+            notifications[0].Message.Should().Be("Remove referral was not possible");
+            notifications[0].Field.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task DeleteHttpMethod_Delete_WhenThereIsNotificationComesFromServiceLayer_ShouldReturnNoContent()
+        {
+            string referralId = Guid.NewGuid().ToString();
+
+            _referralRepository.Setup(_ => _.GetByCodeAsync(referralId))
+                               .ReturnsAsync(new Referral { Id = referralId });
+
+            var result = await _referralController.Delete(referralId);
+            result.Should().BeOfType<NoContentResult>();
         }
     }
 }

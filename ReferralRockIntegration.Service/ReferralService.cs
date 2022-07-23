@@ -84,14 +84,6 @@ namespace ReferralRockIntegration.Service
 
         public async Task RemoveAsync(string id)
         {
-            var referral = await _referralRepository.GetByCodeAsync(id);
-
-            if (referral == null)
-                Notify("The referral informed does not exists");
-
-            if (_notifier.HasNotification())
-                return;
-
             var refferalRemoveInfo = new ReferralRemoveInfo
             {
                 Query = new ReferralQuery
