@@ -8,13 +8,13 @@ using ReferralRockIntegration.Web.Controllers;
 
 namespace ReferralRockIntegration.Web.Tests
 {
-    public class MemberControllerTest
+    public class MemberControllerTests
     {
         private readonly MemberController _memberController;
         private readonly Mock<INotifier> _notifier;
         private readonly Mock<IMemberRepository> _memberRepository;
 
-        public MemberControllerTest()
+        public MemberControllerTests()
         {
             _notifier = new Mock<INotifier>();
             _memberRepository = new Mock<IMemberRepository>();

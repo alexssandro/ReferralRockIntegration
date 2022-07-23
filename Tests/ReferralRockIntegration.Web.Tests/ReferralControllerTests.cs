@@ -2,15 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReferralRockIntegration.ApiWrapper.Interfaces;
+using ReferralRockIntegration.ApiWrapper.Models.Entitiy.Referrals;
 using ReferralRockIntegration.ApiWrapper.Models.Member;
 using ReferralRockIntegration.ApiWrapper.Models.Referrals;
 using ReferralRockIntegration.Service.Interfaces;
+using ReferralRockIntegration.Service.Models.Notification;
 using ReferralRockIntegration.Web.Controllers;
 using ReferralRockIntegration.Web.Models;
 
 namespace ReferralRockIntegration.Web.Tests
 {
-    public class ReferralControllerTest
+    public class ReferralControllerTests
     {
         private readonly ReferralController _referralController;
         private readonly Mock<INotifier> _notifier;
@@ -18,7 +20,7 @@ namespace ReferralRockIntegration.Web.Tests
         private readonly Mock<IMemberRepository> _memberRepository;
         private readonly Mock<IReferralService> _referralService;
 
-        public ReferralControllerTest()
+        public ReferralControllerTests()
         {
             _notifier = new Mock<INotifier>();
             _referralRepository = new Mock<IReferralRepository>();
@@ -126,7 +128,7 @@ namespace ReferralRockIntegration.Web.Tests
             string code = Guid.NewGuid().ToString();
 
             _referralRepository.Setup(_ => _.GetByCodeAsync(code))
-                               .ReturnsAsync(new Referral 
+                               .ReturnsAsync(new Referral
                                {
                                    Id = code,
                                    FirstName = "First"
@@ -142,7 +144,7 @@ namespace ReferralRockIntegration.Web.Tests
             referral.Id.Should().Be(code);
             referral.FirstName.Should().Be("First");
         }
-        
+
         [Fact]
         public async Task Get_Create_GivenNoMemberId_ShouldReturnNotfound()
         {
@@ -172,7 +174,7 @@ namespace ReferralRockIntegration.Web.Tests
                                  LastName = "One",
                                  Email = "firstone@gmail.com",
                                  ReferralCode = referralCode,
-                                 Id = id 
+                                 Id = id
                              });
 
             var result = await _referralController.Create(referralCode);
@@ -187,6 +189,109 @@ namespace ReferralRockIntegration.Web.Tests
             referralViewModel.ReferralCode.Should().Be(referralCode);
             referralViewModel.MemberId.Should().Be(id);
             referralViewModel.Id.Should().Be(null);
+        }
+
+        [Fact]
+        public async Task Post_Create_GivenReferralViewModel_WhenThereIsNotificationInSeviceLayer_ShouldReturnViewResultWithData()
+        {
+            var referralViewModel = new ReferralViewModel
+            {
+                FirstName = "First",
+                LastName = "One",
+                Email = "firstone@gmail.com",
+            };
+
+            _notifier.Setup(_ => _.GetNotifications())
+                     .Returns(new List<Notification>
+                     {
+                         new Notification( null, "someMessage")
+                     });
+
+            _notifier.Setup(_ => _.HasNotification())
+                     .Returns(true);
+
+            var result = await _referralController.Create(referralViewModel);
+
+            _referralService.Verify(_ => _.AddAsync(It.Is<ReferralRegister>(__ =>
+                    __.FirstName == "First"
+                 && __.LastName == "One"
+                 && __.Email == "firstone@gmail.com")), Times.Once);
+
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            viewResult.Model.Should().BeOfType<ReferralViewModel>();
+
+        }
+
+        [Fact]
+        public async Task Post_Create_GivenReferralViewModel_WhenThereIsNotNotificationInSeviceLayer_ShouldReturnRedirect()
+        {
+            var referralViewModel = new ReferralViewModel
+            {
+                FirstName = "First",
+                LastName = "One",
+                Email = "firstone@gmail.com",
+            };
+
+            _notifier.Setup(_ => _.GetNotifications())
+                     .Returns(new List<Notification>());
+
+            _notifier.Setup(_ => _.HasNotification())
+                     .Returns(false);
+
+            _referralService.Setup(_ => _.AddAsync(It.IsAny<ReferralRegister>()))
+                            .ReturnsAsync(new ReferralRegisterResponse
+                            {
+                                Referral = new Referral
+                                {
+                                    MemberReferralCode = "1010",
+                                    Id = "123"
+                                }
+                            });
+
+            var result = await _referralController.Create(referralViewModel);
+
+            _referralService.Verify(_ => _.AddAsync(It.Is<ReferralRegister>(__ =>
+                    __.FirstName == "First"
+                 && __.LastName == "One"
+                 && __.Email == "firstone@gmail.com")), Times.Once);
+
+            result.Should().BeOfType<RedirectResult>();
+            var redirectResult = (RedirectResult)result;
+            redirectResult.Url.Should().Be("/ref/actionresult/1010/123");
+        }
+
+        [Fact]
+        public async Task Post_Create_GivenReferralViewModel_WhenModelStateIsNotValid_ShouldReturnViewWithErrors()
+        {
+            var referralViewModel = new ReferralViewModel
+            {
+                FirstName = null,
+                LastName = null,
+                Email = "firstone@gmail.com",
+            };
+
+            _referralController.ModelState.AddValidationErrors(referralViewModel);
+
+            var result = await _referralController.Create(referralViewModel);
+
+            _referralService.Verify(_ => _.AddAsync(It.Is<ReferralRegister>(__ =>
+                    __.FirstName == "First"
+                 && __.LastName == "One"
+                 && __.Email == "firstone@gmail.com")), Times.Never);
+            
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = (ViewResult)result;
+            var resultReferralViewModel = (ReferralViewModel)viewResult.Model;
+            resultReferralViewModel.FirstName.Should().Be(null);
+            resultReferralViewModel.LastName.Should().Be(null);
+            resultReferralViewModel.Email.Should().Be("firstone@gmail.com");
+
+            _referralController.ModelState.ErrorCount.Should().Be(2);
+
+            _referralController.ModelState["FirstName"].Errors.Count.Should().Be(1);
+            _referralController.ModelState["LastName"].Errors.Count.Should().Be(1);
+            _referralController.ModelState["Email"].Should().Be(null);
         }
     }
 }

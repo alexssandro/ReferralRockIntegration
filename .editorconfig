@@ -38,6 +38,12 @@ dotnet_diagnostic.CS8600.severity = none
 # CA1050: Declare types in namespaces
 dotnet_diagnostic.CA1050.severity = none
 
+# CS8604: Possible null reference argument.
+dotnet_diagnostic.CS8604.severity = none
+
+# xUnit1013: Public method should be marked as test
+dotnet_diagnostic.xUnit1013.severity = none
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
