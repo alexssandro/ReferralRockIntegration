@@ -29,7 +29,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
         }
 
         [Fact]
-        public async Task GivenNoExtraParameters_ShouldInvokePassingOnlyProgramId()
+        public async Task SearchAsync_GivenNoExtraParameters_ShouldInvokePassingOnlyProgramId()
         {
             var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
             _referralRockConfiguration.ProgramId = "123456";
@@ -38,9 +38,9 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
 
             var result = await _memberRepository.SearchAsync(memberRequest);
 
-            httpMessageHandler.Protected().Verify("SendAsync", 
-                    Times.Exactly(1), 
-                    ItExpr.Is<HttpRequestMessage>(req => 
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
                             req.RequestUri.PathAndQuery == "/api/members?programId=123456"
                          && req.Method == HttpMethod.Get
                     ),
@@ -48,12 +48,12 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
         }
 
         [Fact]
-        public async Task GivenOnlyQuery_ShouldInvokePassingOnlyProgramIdAndQuery()
+        public async Task SearchAsync_GivenOnlyQuery_ShouldInvokePassingOnlyProgramIdAndQuery()
         {
             var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
             _referralRockConfiguration.ProgramId = "123456";
 
-            var memberRequest = new MemberRequestParameter 
+            var memberRequest = new MemberRequestParameter
             {
                 Query = "abc123"
             };
@@ -70,7 +70,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
         }
 
         [Fact]
-        public async Task GivenOnlyShowDisabled_ShouldInvokePassingOnlyProgramIdAndQuery()
+        public async Task SearchAsync_GivenOnlyShowDisabled_ShouldInvokePassingOnlyProgramIdAlongside()
         {
             var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
             _referralRockConfiguration.ProgramId = "123456";
@@ -92,7 +92,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
         }
 
         [Fact]
-        public async Task GivenOnlySort_ShouldInvokePassingOnlyProgramIdAndQuery()
+        public async Task SearchAsync_GivenOnlySort_ShouldInvokePassingOnlyProgramIdAlongside()
         {
             var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
             _referralRockConfiguration.ProgramId = "123456";
@@ -114,7 +114,7 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
         }
 
         [Fact]
-        public async Task GivenOnlydateFrom_ShouldInvokePassingOnlyProgramIdAndQuery()
+        public async Task SearchAsync_GivenOnlydateFrom_ShouldInvokePassingOnlyProgramIdAlongside()
         {
             var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
             _referralRockConfiguration.ProgramId = "123456";
@@ -133,6 +133,123 @@ namespace ReferralRockIntegration.ApiWrapper.Tests
                          && req.Method == HttpMethod.Get
                     ),
                     ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task SearchAsync_GivenOnlydateTo_ShouldInvokePassingOnlyProgramIdAlongside()
+        {
+            var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
+            _referralRockConfiguration.ProgramId = "123456";
+
+            var memberRequest = new MemberRequestParameter
+            {
+                DateTo = DateTime.Parse("2022-07-22")
+            };
+
+            var result = await _memberRepository.SearchAsync(memberRequest);
+
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&dateTo=7/22/2022%2012:00:00%20AM"
+                         && req.Method == HttpMethod.Get
+                    ),
+                    ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task SearchAsync_GivenOnlyOffset_ShouldInvokePassingOnlyProgramIdAlongside()
+        {
+            var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
+            _referralRockConfiguration.ProgramId = "123456";
+
+            var memberRequest = new MemberRequestParameter
+            {
+                OffSet = 7
+            };
+
+            var result = await _memberRepository.SearchAsync(memberRequest);
+
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&offset=7"
+                         && req.Method == HttpMethod.Get
+                    ),
+                    ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task SearchAsync_GivenOnlyCount_ShouldInvokePassingOnlyProgramIdAlongside()
+        {
+            var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
+            _referralRockConfiguration.ProgramId = "123456";
+
+            var memberRequest = new MemberRequestParameter
+            {
+                Count = 10
+            };
+
+            var result = await _memberRepository.SearchAsync(memberRequest);
+
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&count=10"
+                         && req.Method == HttpMethod.Get
+                    ),
+                    ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task SearchAsync_GivenSortShowDisabledAndQuery_ShouldInvokePassingProgramIdAlongsideToThem()
+        {
+            var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse(), HttpStatusCode.OK);
+            _referralRockConfiguration.ProgramId = "123456";
+
+            var memberRequest = new MemberRequestParameter
+            {
+                ShowDisabled = false,
+                Sort = "email",
+                Query = "12345678"
+            };
+
+            var result = await _memberRepository.SearchAsync(memberRequest);
+
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&query=12345678&showDisabled=False&sort=email"
+                         && req.Method == HttpMethod.Get
+                    ),
+                    ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task GetByCodeAsync_GivenTheCode_ShouldInvokePassingThisCode()
+        {
+            string code = "abc123";
+            var httpMessageHandler = _httpClientFactory.CreateHttpClient(new MemberResponse 
+            {
+                Members = new Member[]
+                {
+                    new Member { FirstName = "First", LastName = "one" }
+                }
+            }, HttpStatusCode.OK);
+            _referralRockConfiguration.ProgramId = "123456";
+
+            var result = await _memberRepository.GetByCodeAsync(code);
+
+            httpMessageHandler.Protected().Verify("SendAsync",
+                    Times.Exactly(1),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                            req.RequestUri.PathAndQuery == "/api/members?programId=123456&query=abc123"
+                         && req.Method == HttpMethod.Get
+                    ),
+                    ItExpr.IsAny<CancellationToken>());
+
+            result.Should().NotBeNull();
+            result.FirstName.Should().Be("First");
         }
     }
 }
