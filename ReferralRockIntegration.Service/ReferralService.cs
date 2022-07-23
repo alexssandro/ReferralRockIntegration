@@ -77,13 +77,21 @@ namespace ReferralRockIntegration.Service
             var response = await _referralRepository.EditAsync(new UpdateReferralInfo[] { updateReferralInfo });
 
             if (response.ResultInfo.Status != "Succeeded")
-                Notify(response.ResultInfo.Message);
+                Notify($"Failed to update, reason: {response.ResultInfo.Message}");
 
             return response;
         }
 
         public async Task RemoveAsync(string id)
         {
+            var referral = await _referralRepository.GetByCodeAsync(id);
+
+            if (referral == null)
+            {
+                Notify("ReferralId does not exist", "id");
+                return;
+            }
+
             var refferalRemoveInfo = new ReferralRemoveInfo
             {
                 Query = new ReferralQuery
@@ -98,7 +106,7 @@ namespace ReferralRockIntegration.Service
             var response = await _referralRepository.RemoveAsync(new ReferralRemoveInfo[] { refferalRemoveInfo });
 
             if (response.ResultInfo.Status != "Success")
-                Notify(response.ResultInfo.Message);
+                Notify($"Failed to delete, reason: {response.ResultInfo.Message}");
         }
     }
 }

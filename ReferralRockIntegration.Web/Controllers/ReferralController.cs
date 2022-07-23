@@ -212,11 +212,6 @@ namespace ReferralRockIntegration.Web.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var referral = await _referralRepository.GetByCodeAsync(id);
-
-            if (referral == null)
-                return NotFound();
-
             await _referralService.RemoveAsync(id);
 
             if (HasNotification())

@@ -505,14 +505,6 @@ namespace ReferralRockIntegration.Web.Tests
             viewResult.Model.Should().NotBeNull();
         }
         
-        [Fact] 
-        public async Task DeleteHttpMethod_Delete_WhenReferralIdIsNotFound_ShouldReturnNotFound()
-        {
-            string referralId = Guid.NewGuid().ToString();
-            var result = await _referralController.Delete(referralId);
-            result.Should().BeOfType<NotFoundResult>();
-        }
-
         [Fact]
         public async Task DeleteHttpMethod_Delete_WhenNotificationComesFromServiceLayer_ShouldReturnBadRequest()
         {
