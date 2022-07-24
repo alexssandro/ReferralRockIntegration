@@ -7,7 +7,7 @@ namespace ReferralRockIntegration.Web.Models
     {
         public string? Id { get; set; }
         public string ReferralCode { get; set; }
-        public string MemberId { get; set; }
+        public string? MemberId { get; set; }
 
         [Display(Name = "First name")]
         [Required(ErrorMessage = "First name is required")]

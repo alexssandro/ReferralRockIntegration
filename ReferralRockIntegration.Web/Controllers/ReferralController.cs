@@ -110,11 +110,11 @@ namespace ReferralRockIntegration.Web.Controllers
             if (IsThereAnyError())
                 return View(referralViewModel);
 
-            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
+            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}/{FormAction.Create}");
         }
 
-        [HttpGet("actionresult/{referralCode}/{referralId:guid}")]
-        public async Task<IActionResult> ShowResult(string referralCode, string referralId)
+        [HttpGet("actionresult/{referralCode}/{referralId:guid}/{formAction}")]
+        public async Task<IActionResult> ShowResult(string referralCode, string referralId, FormAction formAction)
         {
             if (string.IsNullOrEmpty(referralCode) || string.IsNullOrEmpty(referralId))
                 return NotFound();
@@ -134,7 +134,8 @@ namespace ReferralRockIntegration.Web.Controllers
                 MemberId = member.Id,
                 ReferralCode = referralCode,
                 ReferralName = referral.FullName,
-                MemberName = $"{member.FirstName} {member.LastName}"
+                MemberName = $"{member.FirstName} {member.LastName}",
+                FormAction = formAction
             };
 
             return View(referralResult);
@@ -195,7 +196,7 @@ namespace ReferralRockIntegration.Web.Controllers
             if (IsThereAnyError())
                 return View(referralViewModel);
 
-            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}");
+            return Redirect($"/ref/actionresult/{response.Referral.MemberReferralCode}/{response.Referral.Id}/{FormAction.Update}");
         }
 
         [HttpGet("delete/{referralId:guid}")]
