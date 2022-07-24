@@ -259,7 +259,7 @@ namespace ReferralRockIntegration.Web.Tests
 
             result.Should().BeOfType<RedirectResult>();
             var redirectResult = (RedirectResult)result;
-            redirectResult.Url.Should().Be("/ref/actionresult/1010/123");
+            redirectResult.Url.Should().Be($"/ref/actionresult/1010/123/{FormAction.Create}");
         }
 
         [Fact]
