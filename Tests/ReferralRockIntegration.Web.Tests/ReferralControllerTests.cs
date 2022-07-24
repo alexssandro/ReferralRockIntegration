@@ -300,7 +300,7 @@ namespace ReferralRockIntegration.Web.Tests
         {
             string referralId = Guid.NewGuid().ToString();
 
-            var result = await _referralController.ShowResult(null, referralId);
+            var result = await _referralController.ShowResult(null, referralId, FormAction.Create);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -310,7 +310,7 @@ namespace ReferralRockIntegration.Web.Tests
             string referralId = null;
             string referralCode = "1010";
 
-            var result = await _referralController.ShowResult(referralCode, referralId);
+            var result = await _referralController.ShowResult(referralCode, referralId, FormAction.Create);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -320,7 +320,7 @@ namespace ReferralRockIntegration.Web.Tests
             string referralId = null;
             string referralCode = null;
 
-            var result = await _referralController.ShowResult(referralCode, referralId);
+            var result = await _referralController.ShowResult(referralCode, referralId, FormAction.Create);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -330,7 +330,7 @@ namespace ReferralRockIntegration.Web.Tests
             string referralId = Guid.NewGuid().ToString();
             string referralCode = "1010";
 
-            var result = await _referralController.ShowResult(referralCode, referralId);
+            var result = await _referralController.ShowResult(referralCode, referralId, FormAction.Create);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -346,7 +346,7 @@ namespace ReferralRockIntegration.Web.Tests
                                  ReferralCode = referralCode
                              });
 
-            var result = await _referralController.ShowResult(referralCode, referralId);
+            var result = await _referralController.ShowResult(referralCode, referralId, FormAction.Create);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -372,7 +372,7 @@ namespace ReferralRockIntegration.Web.Tests
                                    FullName = "Larry Page"
                                });
 
-            var result = await _referralController.ShowResult(referralCode, referralId);
+            var result = await _referralController.ShowResult(referralCode, referralId, FormAction.Create);
             result.Should().BeOfType<ViewResult>();
             var viewResult = (ViewResult)result;
             viewResult.Model.Should().BeOfType<ReferralResultViewModel>();
